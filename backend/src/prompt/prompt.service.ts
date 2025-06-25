@@ -23,6 +23,8 @@ export class PromptService {
         });
         await this.promptRepo.save(prompt);
 
+        console.log(promptText);
+
         const videoPath = await this.generateVideoFromPrompt(promptText, prompt.id);
 
         const video = this.videoRepo.create({
