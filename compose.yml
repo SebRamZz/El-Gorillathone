@@ -1,15 +1,16 @@
 services:
   postgres:
     image: postgres:17.5-alpine
-    container_name: veo3_postgres_db
+    container_name: hackaton-postgres
     volumes:
-      - postgres-data:/var/lib/postgres/data
+      - postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     restart: on-failure
     healthcheck:
       test:
@@ -25,7 +26,7 @@ services:
     build:
       context: ./backend
       dockerfile: dockerfile.dev
-    container_name: veo3_backend
+    container_name: hackaton-backend
     working_dir: /usr/src/app
     ports:
       - "3000:3000"
@@ -44,7 +45,7 @@ services:
     build:
       context: ./frontend
       dockerfile: dockerfile.dev
-    container_name: veo3_frontend
+    container_name: hackaton-frontend
     working_dir: /usr/src/app
     ports:
       - "4200:4200"
@@ -53,8 +54,21 @@ services:
       - angular_node_modules:/usr/src/app/node_modules
     environment:
       - NODE_ENV=${NODE_ENV:-development}
-    command: ng serve
+    command: ng serve --host 0.0.0.0
 
+  adminer:
+    image: adminer:4.8.1
+    container_name: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: pepa-linha
+      ADMINER_PLUGINS: 'tables-filter tinymce'
 
 volumes:
   nest_node_modules:

@@ -1,0 +1,76 @@
+<div class="main" style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+  <div class="form-container">
+    <h2 style="margin-bottom: 2rem; text-align: center;">Connexion</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="submit()" class="center-form" style="width: 100%; gap: 1.5rem;">
+      <div style="width: 100%; margin-bottom: 1.5rem;">
+        <label style="display: block; margin-bottom: 0.5rem;">Email*</label>
+        <input formControlName="email" type="email" class="input-full">
+      </div>
+      <div style="width: 100%;">
+        <label style="display: block; margin-bottom: 0.5rem;">Mot de passe*</label>
+        <input formControlName="password" type="password" class="input-full">
+      </div>
+      <button type="submit" class="main-btn" [disabled]="loading" style="width: 100%; margin-top: 1rem;">
+        Se connecter
+      </button>
+      <div *ngIf="error" class="error" style="color: rgb(255, 49, 93); margin-top: 0.5rem; text-align: center;">
+        {{ error }}
+      </div>
+    </form>
+    <p style="margin-top: 2rem; text-align: center;">
+      Pas encore de compte ?
+      <a href="#" (click)="goToRegister(); $event.preventDefault()" style="color: rgb(255, 49, 93); font-weight: 500; text-decoration: underline;">Créer un compte</a>
+    </p>
+    <div *ngIf="popup" class="popup" [ngStyle]="{'background': popup.color === 'green' ? '#d4edda' : '#f8d7da', 'color': popup.color === 'green' ? '#155724' : '#721c24'}">
+      {{ popup.message }}
+    </div>
+  </div>
+</div>
+
+<style>
+  .form-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 3rem;
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  .input-full {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #eee;
+    border-radius: 0.5rem;
+    background: #fafafa;
+    box-sizing: border-box;
+  }
+  .main-btn {
+    background-color: rgb(255, 49, 93);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+  .main-btn:hover {
+    background-color: rgb(255, 49, 93);
+  }
+  .error {
+    color: rgb(255, 49, 93);
+  }
+  .popup {
+    position: absolute;
+    top: -2.5rem;
+    left: 0;
+    right: 0;
+    margin: auto;
+    margin-bottom: 2rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-align: center;
+    font-weight: 500;
+    z-index: 10;
+    transition: opacity 0.3s;
+  }
+</style>
