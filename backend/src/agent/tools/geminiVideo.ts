@@ -1,19 +1,14 @@
-/* eslint-disable */
-import { Tool } from '@langchain/core/tools';
+import { tool } from '@langchain/core/tools';
+import { z } from 'zod';
 import { GoogleGenAI } from '@google/genai';
 import { createWriteStream } from 'fs';
 import path from 'path';
 import fetch from 'node-fetch';
 
-
-export class GeminiVeoVideoTool extends Tool {
-  name = 'gemini-veo-video-generator';
-  description =
-    "Génère une vidéo à partir d'un prompt texte avec le modèle Gemini Veo 2.0 de Google.";
-
-  async _call(prompt: string): Promise<string> {
+export const geminiVeoVideoTool = tool(
+  async ({ prompt }) => {
     if (!process.env.GOOGLE_API_KEY) {
-      throw new Error('GOOGLE_API_KEY environment variable is not set');
+      throw new Error('❌ GOOGLE_API_KEY n’est pas définie dans les variables d’environnement.');
     }
 
     const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
@@ -42,17 +37,14 @@ export class GeminiVeoVideoTool extends Tool {
 
       const resp = await fetch(videoUrl);
       if (!resp.ok) {
-        throw new Error(
-          `Échec du téléchargement de la vidéo : ${resp.statusText}`,
-        );
+        throw new Error(`❌ Échec du téléchargement : ${resp.statusText}`);
       }
 
       if (!resp.body) {
-        throw new Error('Le corps de la réponse est vide.');
+        throw new Error('❌ Réponse vide lors du téléchargement.');
       }
 
       const writer = createWriteStream(outputPath);
-
       await new Promise<void>((resolve, reject) => {
         resp.body!.pipe(writer);
         writer.on('finish', resolve);
@@ -62,7 +54,17 @@ export class GeminiVeoVideoTool extends Tool {
       return outputPath
     } catch (err) {
       console.error('Erreur lors de la génération vidéo :', err);
-      return '❌ Erreur lors de la génération vidéo.';
+      return '❌ Erreur pendant la génération de la vidéo.';
     }
+  },
+  {
+    name: 'gemini-veo-video-generator',
+    description:
+      "Génère une vidéo à partir d'un prompt texte avec le modèle Gemini Veo (2 ou 3) de Google.",
+    schema: z.object({
+      prompt: z
+        .string()
+        .describe("Prompt décrivant la scène ou le contenu de la vidéo (ex: 'Un coucher de soleil sur une plage tropicale')."),
+    }),
   }
-}
+);
