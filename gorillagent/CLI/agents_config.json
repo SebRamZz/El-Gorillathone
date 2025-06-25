@@ -1,0 +1,10 @@
+{
+  "api_url": "http://localhost:3002",
+  "agents": [
+    {
+      "id": "gorilla",
+      "name": "Gorilla",
+      "description": "Agent spécialisé pour générer de vidéo de gorille"
+    }
+  ]
+} 

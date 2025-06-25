@@ -58,6 +58,27 @@ services:
       - NODE_ENV=${NODE_ENV:-development}
     command: ng serve --host 0.0.0.0
 
+  gorillagent:
+    build:
+      context: ./gorillagent
+      dockerfile: Dockerfile
+    container_name: hackaton-gorillagent
+    working_dir: /app
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./gorillagent:/app
+      - gorillagent_node_modules:/app/node_modules
+      - gorillagent_uploads:/app/uploads
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - PORT=3002
+      - REQUIRE_AUTH=false # A enlever après pour gérer l'authentification.
+    command: npm run server
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   adminer:
     image: adminer:4.8.1
     container_name: adminer
@@ -75,4 +96,6 @@ services:
 volumes:
   nest_node_modules:
   angular_node_modules:
+  simple_agent_node_modules:
+  simple_agent_uploads:
   postgres-data:

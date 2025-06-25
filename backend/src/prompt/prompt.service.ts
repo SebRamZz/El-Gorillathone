@@ -1,74 +1,51 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Prompt } from './prompt.entity';
-import { Video } from '../video/video.entity';
-import { CreatePromptDto } from './dto/create-prompt.dto';
-import { gorillAgent } from '../agent/agent';
+import {Video} from "../video/video.entity";
+import {Repository} from "typeorm";
+import {InjectRepository} from "@nestjs/typeorm";
+import {Prompt} from "./prompt.entity";
+import {Injectable} from "@nestjs/common";
+import {CreatePromptDto} from "./dto/create-prompt.dto";
 
 @Injectable()
 export class PromptService {
-  constructor(
-    @InjectRepository(Prompt)
-    private promptRepo: Repository<Prompt>,
-    @InjectRepository(Video)
-    private videoRepo: Repository<Video>,
-  ) {}
+    constructor(
+        @InjectRepository(Prompt)
+        private promptRepo: Repository<Prompt>,
+        @InjectRepository(Video)
+        private videoRepo: Repository<Video>,
+    ) {}
 
-  async createPromptWithVideoFromFields(fields: CreatePromptDto): Promise<Video> {
-    const promptText = this.generatePromptText(fields);
+    async createPromptWithVideoFromFields(fields: CreatePromptDto): Promise<Video> {
+        const promptText = this.generatePromptText(fields);
 
-    const prompt = this.promptRepo.create({
-      userId: fields.userId,
-      text: promptText,
-    });
-    await this.promptRepo.save(prompt);
+        const prompt = this.promptRepo.create({
+            userId: fields.userId,
+            text: promptText,
+        });
+        await this.promptRepo.save(prompt);
 
-    const videoPathOrError = await this.invokeAgentForVideo(promptText);
+        const videoPath = await this.generateVideoFromPrompt(promptText, prompt.id);
 
-    if (videoPathOrError.startsWith('❌')) {
-      throw new Error(videoPathOrError);
+        const video = this.videoRepo.create({
+            userId: fields.userId,
+            promptId: prompt.id,
+            filePath: videoPath,
+        });
+
+        return this.videoRepo.save(video);
     }
 
-    const video = this.videoRepo.create({
-      userId: fields.userId,
-      promptId: prompt.id,
-      filePath: videoPathOrError,
-    });
-
-    return this.videoRepo.save(video);
-  }
-
-  private generatePromptText(fields: CreatePromptDto): string {
-    return `Créer une vidéo de ${fields.duration} dans un format ${fields.format} avec une qualité ${fields.quality},
-    représentant ${fields.numberOfCharacters} personnage(s) de type ${fields.characterType} portant ${fields.outfit},
-    situé à ${fields.location}, dans un contexte ${fields.context}. 
-    Le(s) personnage(s) ont une personnalité ${fields.personality} et effectuent l'action suivante : ${fields.action}.`;
-  }
-
-  private async invokeAgentForVideo(promptText: string): Promise<string> {
-    try {
-      const resultState = await gorillAgent.invoke({
-        messages: [
-          {
-            role: 'user',
-            content: promptText,
-          },
-        ],
-      });
-
-      if (typeof resultState === 'string') {
-        return resultState;
-      }
-
-      if ('output' in resultState && typeof resultState.output === 'string') {
-        return resultState.output;
-      }
-
-      return '❌ L\'agent n\'a pas retourné de réponse valide.';
-    } catch (err) {
-      console.error('Erreur lors de l’appel à l’agent IA:', err);
-      return '❌ Erreur lors de la génération vidéo.';
+    private generatePromptText(fields: CreatePromptDto): string {
+        return `Créer une vidéo de ${fields.duration} dans un format ${fields.format} avec une qualité ${fields.quality},
+         représentant ${fields.numberOfCharacters} personnage(s) de type ${fields.characterType} portant ${fields.outfit},
+          situé à ${fields.location}, dans un contexte ${fields.context}. 
+          Le(s) personnage(s) ont une personnalité ${fields.personality} et effectuent l'action suivante : ${fields.action}.`;
     }
-  }
+
+    // 🧪 Simulation IA
+    private async generateVideoFromPrompt(prompt: string, promptId: number): Promise<string> {
+        const fs = await import('fs/promises');
+        const filePath = `uploads/videos/generated-${promptId}.mp4`;
+        await fs.writeFile(filePath, 'SIMULATED_VIDEO_BINARY_DATA');
+        return filePath;
+    }
 }
