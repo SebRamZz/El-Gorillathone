@@ -27,6 +27,12 @@ interface UserInput {
   chat_id?: string;
   context?: any;
   details?: any;
+  prompt?: string;
+  model?: 'veo-2.0-generate-001' | 'veo-3.0-generate-preview';
+  aspectRatio?: '16:9' | '9:16';
+  personGeneration?: 'dont_allow';
+  numberOfVideos?: number;
+  durationSeconds?: number;
 }
 
 interface AgentResponse {
@@ -173,7 +179,9 @@ app.get('/agents', authenticateToken, async (req: Request, res: Response) => {
 app.post('/:agentId/invoke', authenticateToken, async (req: Request, res: Response) => {
   const { agentId } = req.params;
   const userInput: UserInput = req.body;
-  
+
+  //TODO: Auth pour récupérer l'utilisateur pour générer la vidéo.
+
   try {
     console.log(`🤖 Invocation de l'agent ${agentId} pour le thread ${userInput.thread_id || 'nouveau'}`);
     
@@ -192,7 +200,14 @@ app.post('/:agentId/invoke', authenticateToken, async (req: Request, res: Respon
 
     // Configuration pour l'agent
     const config: RunnableConfig = {
-      configurable: { thread_id: threadId },
+      configurable: {
+        thread_id: threadId,
+        model: userInput.model,
+        aspectRatio: userInput.aspectRatio,
+        personGeneration: userInput.personGeneration,
+        numberOfVideos: userInput.numberOfVideos,
+        durationSeconds: userInput.durationSeconds
+      },
       runId: runId
     };
 

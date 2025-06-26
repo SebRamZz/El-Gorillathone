@@ -37,7 +37,6 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV:-development}
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
-      - OPEN_API_KEY=${OPEN_API_KEY}
     command: npm run start:dev
     depends_on:
      - postgres
@@ -96,6 +95,6 @@ services:
 volumes:
   nest_node_modules:
   angular_node_modules:
-  simple_agent_node_modules:
-  simple_agent_uploads:
+  gorillagent_node_modules:
+  gorillagent_uploads:
   postgres-data:
