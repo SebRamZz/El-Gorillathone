@@ -1,63 +1,26 @@
+.app {
+    display: flex;
+    overflow-y: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+app-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 260px;
+    z-index: 10;
+}
+
 .main {
-  min-height: 100vh;
-  display: flex;
-  background:
-    linear-gradient(180deg, #ff6a00 0%, #ff41f8 50%, #7702ff 100%),
-    url('/5q92mjc5c51bjlwaj3rs9aa82.svg') center/cover no-repeat;
-}
-
-.form-container {
-  background: #fff;
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 32px rgba(0,0,0,0.08);
-  padding: 2.5rem 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.center-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-}
-
-h1 {
-  font-size: 2rem;
-  font-weight: 600;
-  color: #2d2d2d;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.btn-group {
-  display: flex;
-  gap: 1.5rem;
-}
-
-.main-btn {
-  background: linear-gradient(90deg, #ff41f8 0%, #7702ff 100%);
-  color: #fff;
-  border: none;
-  border-radius: 2rem;
-  padding: 0.75rem 2.5rem;
-  font-size: 1.1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-  box-shadow: 0 2px 8px rgba(119,2,255,0.08);
-}
-
-.main-btn:hover {
-  background: linear-gradient(90deg, #7702ff 0%, #ff41f8 100%);
-  transform: translateY(-2px) scale(1.04);
-}
-
-img[alt="Logo RougeNoir"] {
-  height: 200px !important;
-  width: auto !important;
-  max-width: 100%;
-  display: block;
-  margin-left: 2rem;
+    margin-left: 260px;
+    display: flex;
+    flex: 1 1 0;
+    height: 100vh;
+    overflow-x: hidden;
+    background: #fff;
+    flex-direction: column;
+    min-width: 0;
 }

@@ -1,0 +1,138 @@
+.sidebar {
+      width: 260px;
+      background-color: #f7f7f7;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #e0e0e0;
+      user-select: none;
+      height: 100vh;;
+    }
+    .sidebar-top {
+      padding: 20px 22px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-weight: 600;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #d52b6e;
+    }
+    .logo svg {
+      width: 24px;
+      height: 24px;
+      fill: #d52b6e;
+    }
+    /* Navigation */
+    nav.nav-menu {
+      flex-grow: 1;
+      padding-top: 15px;
+    }
+    nav.nav-menu ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    nav.nav-menu li {
+      padding: 10px 25px;
+      cursor: pointer;
+      color: #222;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: background-color 0.15s ease-in-out;
+      user-select: none;
+      font-size: 15px;
+    }
+    nav.nav-menu li.selected, nav.nav-menu li:hover {
+      background-color: #ddd;
+      font-weight: 600;
+    }
+    /* Support/changelog section */
+    .sidebar-bottom-links {
+      border-top: 1px solid #e0e0e0;
+      padding: 15px 0;
+    }
+    .bottom-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 25px;
+      font-weight: 500;
+      font-size: 14px;
+      color: #333;
+      cursor: pointer;
+      user-select: none;
+    }
+    .bottom-link svg, .user-icon svg {
+      fill: #666;
+      width: 18px;
+      height: 18px;
+    }
+    .bottom-link:hover {
+      color: #d52b6e;
+      fill: #d52b6e;
+    }
+
+    .user-box {
+      border-bottom: 1px solid #e0e0e0;
+      padding: 14px 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: #222;
+      font-weight: 600;
+      cursor: default;
+      user-select: none;
+    }
+    .user-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      text-transform: lowercase;
+      font-size: 20px;
+      user-select: none;
+      position: relative;
+    }
+    .user-email {
+      font-weight: 400;
+      font-size: 12px;
+      color: #555;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .logout-btn {
+      width: 100%;
+      background: none;
+      border: none;
+      color: #ff315d;
+      font-weight: 600;
+      padding: 1rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      cursor: pointer;
+      border-top: 1px solid #eee;
+      transition: background 0.15s;
+    }
+    .logout-btn:hover {
+      background: #ffe6ec;
+    }

@@ -8,6 +8,7 @@ import { AuthService } from '../../../services/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
 })
@@ -42,7 +43,7 @@ export class LoginComponent {
         this.loading = false;
         setTimeout(() => {
           this.popup = null;
-          this.router.navigate(['/']);
+          this.router.navigate(['/videos']);
         }, 1500);
       },
       error: err => {

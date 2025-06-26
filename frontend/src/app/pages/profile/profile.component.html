@@ -1,0 +1,38 @@
+<div class="container">
+  <main>
+    <section class="form-section" aria-label="Informations personnelles">
+      <h2 class="section-title">Informations personnelles</h2>
+
+      <div class="user-infos">
+        <div class="fields-row" aria-describedby="desc-personnel">
+          <div class="field-group">
+            <label for="firstName">Prénom <span class="required">*</span></label>
+            <input type="text" id="firstName" name="firstName" [value]="user?.firstName || ''" required autocomplete="given-name" />
+          </div>
+          <div class="field-group">
+            <label for="lastName">Nom <span class="required">*</span></label>
+            <input type="text" id="lastName" name="lastName" [value]="user?.lastName || ''" required autocomplete="family-name" />
+          </div>
+        </div>
+
+        <div class="fields-row">
+          <div class="field-group">
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" [value]="user?.email || ''" disabled />
+          </div>
+          <div class="field-group">
+            <label for="role">Rôle</label>
+            <input type="text" id="role" name="role" [value]="user?.role || ''" disabled />
+          </div>
+        </div>
+
+        <div class="fields-row">
+          <div class="field-group">
+            <label for="sector">Secteur</label>
+            <input type="text" id="sector" name="sector" [value]="user?.sector || ''" disabled />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

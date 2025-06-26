@@ -3,6 +3,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { VideoService } from './video.service';
 import { extname } from 'path';
+import { Express } from 'express';
 
 @Controller('videos')
 export class VideoController {
