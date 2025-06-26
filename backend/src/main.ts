@@ -11,7 +11,6 @@ async function bootstrap() {
   app.enableCors();
   app.setGlobalPrefix('api/v1');
 
-  // Sert statiquement les vidéos depuis /uploads/videos
   const videosPath = path.join(__dirname, '..', 'uploads', 'videos');
   app.use('/uploads/videos', express.static(videosPath));
 

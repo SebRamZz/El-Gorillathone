@@ -22,6 +22,8 @@ export class CreateVideosComponent implements OnInit {
     durationSeconds: 8,
   };
   userId: string | null = null;
+  isLoading = false;
+  successMessage = '';
 
   constructor(
     private videoService: VideoService,
@@ -37,7 +39,22 @@ export class CreateVideosComponent implements OnInit {
     }
   }
 
+  get modelPrice(): number {
+    if (this.form.model === 'veo-3.0-generate-preview') {
+      return 20;
+    }
+    return 10;
+  }
+
   onSubmit() {
+    this.isLoading = true;
+    this.successMessage = '';
+
+    setTimeout(() => {
+      this.isLoading = false;
+      this.successMessage = 'Vidéo générée avec succès ! Retournez sur la liste des vidéos pour la retrouver.';
+    }, 3000);
+
     this.videoService.generateVideo(
       this.form.message,
       this.form.model,
@@ -47,11 +64,8 @@ export class CreateVideosComponent implements OnInit {
       this.form.durationSeconds,
       this.userId || '',
     ).subscribe({
-      next: (res) => {
-        console.log('Vidéo générée :', res);
-      },
       error: (err) => {
-        console.error('Erreur génération vidéo :', err);
+        console.error('Erreur lors de la génération de la vidéo', err);
       }
     });
   }

@@ -10,7 +10,7 @@ Tu as accès à un outil de génération vidéos qui permet a partir d'une descr
 
 **Exemples d'usage** :
 
-- "Génère moi une vidéo de gorille qui effectue des frappes au foot (soccer) tah lewandowski"
+- "Génère moi une vidéo de gorille"
 
 L'outil permet de générer une vidéo réaliste.
 

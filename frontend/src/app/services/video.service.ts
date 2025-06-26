@@ -27,7 +27,6 @@ export class VideoService {
       durationSeconds,
       userId
     };
-    console.log('Génération de vidéo avec les paramètres :', body);
     return this.http.post<any>(`${this.AgentUrl}`, body);
   }
 

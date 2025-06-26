@@ -1,6 +1,6 @@
 <main class="main-content" role="main" tabindex="0" aria-label="Mes vidéos">
   <div class="header-row">
-    <h1>GoVidéo</h1>
+    <h1>GoVidéos</h1>
     <nav class="tabs-nav" aria-label="Navigation vidéos">
       <a class="tab active" routerLink="/videos">
         Mes vidéos
@@ -19,34 +19,26 @@
 
   <section class="videos-section" aria-labelledby="videos-label">
     <div class="videos-grid">
-      <div class="video-card">
-        <img class="video-thumbnail" src="./Thumb1.jpg" />
+      <div class="video-card" *ngFor="let video of videos">
+        <video
+          class="video-thumbnail"
+          [src]="'http://localhost:3000' + (video.filePath.startsWith('/') ? '' : '/') + video.filePath"
+          controls
+          width="220"
+          height="200"
+          *ngIf="video.filePath"
+          (loadedmetadata)="onLoadedMetadata($event, video.id)"
+        ></video>
         <div class="video-info">
-          <div class="video-title">Titre de la vidéo 1</div>
-          <div class="video-meta">00:08</div>
+          <div class="video-title">Vidéo #{{ video.id }}</div>
+          <div class="video-meta" *ngIf="videoDurations[video.id]">
+            Durée : {{ videoDurations[video.id] | number:'1.0-0' }} sec
+          </div>
         </div>
       </div>
-      <div class="video-card">
-        <img class="video-thumbnail" src="./Thumb2.png" />
-        <div class="video-info">
-          <div class="video-title">Titre de la vidéo 2</div>
-          <div class="video-meta">00:54</div>
-        </div>
-      </div>
-      <div class="video-card">
-        <img class="video-thumbnail" src="./Thumb3.png" />
-        <div class="video-info">
-          <div class="video-title">Titre de la vidéo 3</div>
-          <div class="video-meta">00:28</div>
-        </div>
-      </div>
-      <div class="video-card">
-        <div class="video-thumbnail placeholder"></div>
-        <div class="video-info">
-          <div class="video-title">Titre de la vidéo 4</div>
-          <div class="video-meta">01:33</div>
-        </div>
-      </div>
+    </div>
+    <div *ngIf="videos.length === 0" class="empty-list">
+      Aucune vidéo trouvée.
     </div>
   </section>
 </main>
