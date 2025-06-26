@@ -4,6 +4,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {Prompt} from "./prompt.entity";
 import {Injectable} from "@nestjs/common";
 import {CreatePromptDto} from "./dto/create-prompt.dto";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class PromptService {
@@ -12,6 +13,7 @@ export class PromptService {
         private promptRepo: Repository<Prompt>,
         @InjectRepository(Video)
         private videoRepo: Repository<Video>,
+        private readonly config: ConfigService,
     ) {}
 
     async createPromptWithVideoFromFields(fields: CreatePromptDto): Promise<Video> {

@@ -4,6 +4,7 @@ import { diskStorage } from 'multer';
 import { VideoService } from './video.service';
 import { extname } from 'path';
 import { Express } from 'express';
+import type { Multer } from 'multer';
 
 @Controller('videos')
 export class VideoController {
@@ -20,7 +21,8 @@ export class VideoController {
         }),
     }))
     async uploadVideo(
-        @UploadedFile() file: Express.Multer.File,
+        @UploadedFile() file: any,
+        @Query('promptId') promptId: number,
     ) {
         const userId = 1;
         console.log('Jai recu un appel du back avec toutes les infos', file, userId);

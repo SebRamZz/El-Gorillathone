@@ -4,9 +4,13 @@ import {PromptService} from "./prompt.service";
 import {PromptController} from "./prompt.controller";
 import {Video} from "../video/video.entity";
 import {Prompt} from "./prompt.entity";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Prompt, Video])],
+    imports: [
+        TypeOrmModule.forFeature([Prompt, Video]),
+        ConfigModule,
+    ],
     providers: [PromptService],
     controllers: [PromptController],
 })

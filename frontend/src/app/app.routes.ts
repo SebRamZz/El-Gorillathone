@@ -11,7 +11,11 @@ export const routes: Routes = [
     },
     {
         path: 'videos',
-        loadComponent: () => import('./pages/videos/videos.component').then(m => m.VideosComponent)
+        loadComponent: () => import('./pages/videos/list-videos/list-videos.component').then(m => m.ListVideosComponent)
+    },
+    {
+        path: 'videos/create',
+        loadComponent: () => import('./pages/videos/create-videos/create-videos.component').then(m => m.CreateVideosComponent)
     },
     {
         path: 'services',

@@ -35,9 +35,9 @@ services:
       - ./backend:/usr/src/app
       - nest_node_modules:/usr/src/app/node_modules
     environment:
-      NODE_ENV: ${NODE_ENV:-development}
-      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
-      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      - NODE_ENV=${NODE_ENV:-development}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
     command: npm run start:dev
     depends_on:
      - postgres
@@ -75,6 +75,7 @@ services:
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - PORT=3002
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - REQUIRE_AUTH=false
     command: npm run server
     extra_hosts:
       - "host.docker.internal:host-gateway"

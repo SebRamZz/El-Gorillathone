@@ -8,6 +8,6 @@ import { VideoController } from './video.controller';
     imports: [TypeOrmModule.forFeature([Video])],
     providers: [VideoService],
     controllers: [VideoController],
-    exports: [VideoService], // pour l'injecter dans PromptService
+    exports: [VideoService],
 })
 export class VideoModule {}
