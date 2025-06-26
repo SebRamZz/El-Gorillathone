@@ -24,5 +24,9 @@ export const routes: Routes = [
     {
         path: 'profile',
         loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent)
+    },
+    {
+        path: 'web-scraper',
+        loadComponent: () => import('./pages/web-scraper/web-scraper.component').then(m => m.WebScraperComponent)
     }
 ];

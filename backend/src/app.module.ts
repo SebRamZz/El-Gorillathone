@@ -9,6 +9,7 @@ import { Video } from './video/video.entity';
 import {UserModule} from "./user/user.module";
 import {AuthModule} from "./auth/auth.module";
 import {UserEntity} from "./user/user.entity";
+import { WebScraperModule } from './web-scraper/web-scraper.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import {UserEntity} from "./user/user.entity";
     AuthModule,
     PromptModule,
     VideoModule,
+    WebScraperModule,
   ],
   controllers: [AppController],
   providers: [AppService],
