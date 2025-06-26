@@ -9,8 +9,5 @@ export class Video {
     userId: number;
 
     @Column()
-    promptId: number;
-
-    @Column()
     filePath: string;
 }

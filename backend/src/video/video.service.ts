@@ -10,8 +10,8 @@ export class VideoService {
         private videoRepo: Repository<Video>,
     ) {}
 
-    async saveVideo(userId: number, promptId: number, filePath: string): Promise<Video> {
-        const video = this.videoRepo.create({ userId, promptId, filePath });
+    async saveVideo(userId: number, filePath: string): Promise<Video> {
+        const video = this.videoRepo.create({ userId, filePath });
         return this.videoRepo.save(video);
     }
 

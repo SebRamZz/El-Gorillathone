@@ -73,7 +73,7 @@ services:
       - NODE_ENV=${NODE_ENV:-development}
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - PORT=3002
-      - REQUIRE_AUTH=false # A enlever après pour gérer l'authentification.
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
     command: npm run server
     extra_hosts:
       - "host.docker.internal:host-gateway"

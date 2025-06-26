@@ -27,7 +27,6 @@ export class PromptService {
 
         const video = this.videoRepo.create({
             userId: fields.userId,
-            promptId: prompt.id,
             filePath: videoPath,
         });
 

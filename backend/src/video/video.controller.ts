@@ -20,11 +20,11 @@ export class VideoController {
     }))
     async uploadVideo(
         @UploadedFile() file: Express.Multer.File,
-        @Query('userId') userId: number,
-        @Query('promptId') promptId: number,
     ) {
+        const userId = 1;
+        console.log('Jai recu un appel du back avec toutes les infos', file, userId);
         const filePath = file.path;
-        return this.videoService.saveVideo(userId, promptId, filePath);
+        return this.videoService.saveVideo(userId, filePath);
     }
 
     @Get()

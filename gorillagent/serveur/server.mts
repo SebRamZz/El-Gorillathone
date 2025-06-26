@@ -179,8 +179,7 @@ app.get('/agents', authenticateToken, async (req: Request, res: Response) => {
 app.post('/:agentId/invoke', authenticateToken, async (req: Request, res: Response) => {
   const { agentId } = req.params;
   const userInput: UserInput = req.body;
-
-  //TODO: Auth pour récupérer l'utilisateur pour générer la vidéo.
+  const userToken = (req as any).token
 
   try {
     console.log(`🤖 Invocation de l'agent ${agentId} pour le thread ${userInput.thread_id || 'nouveau'}`);
@@ -206,7 +205,8 @@ app.post('/:agentId/invoke', authenticateToken, async (req: Request, res: Respon
         aspectRatio: userInput.aspectRatio,
         personGeneration: userInput.personGeneration,
         numberOfVideos: userInput.numberOfVideos,
-        durationSeconds: userInput.durationSeconds
+        durationSeconds: userInput.durationSeconds,
+        userToken: userToken,
       },
       runId: runId
     };

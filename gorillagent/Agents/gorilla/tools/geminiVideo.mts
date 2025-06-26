@@ -1,12 +1,13 @@
 import { tool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { GoogleGenAI } from '@google/genai';
-import { createWriteStream } from 'fs';
+import { createWriteStream, createReadStream, existsSync, mkdirSync } from 'fs';
 import path from 'path';
 import fetch from 'node-fetch';
+import FormData from 'form-data';
 
 export const geminiVeoVideoTool = tool(
-  async ({ prompt, model, aspectRatio, personGeneration, numberOfVideos, durationSeconds, userId }) => {
+  async ({ prompt, model, aspectRatio, personGeneration, numberOfVideos, durationSeconds, userToken }) => {
     if (!process.env.GOOGLE_API_KEY) {
       throw new Error('❌ GOOGLE_API_KEY n’est pas définie dans les variables d’environnement.');
     }
@@ -14,14 +15,15 @@ export const geminiVeoVideoTool = tool(
     const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });
 
     try {
+      // Génération de la vidéo avec Gemini Veo
       let operation = await ai.models.generateVideos({
-        model: 'veo-2.0-generate-001', // 'veo-2.0-generate-001' ou 'veo-3.0-generate-preview'
+        model,
         prompt,
         config: {
-          personGeneration: 'dont_allow', // "allow_all" Not avalaible in UE
+          personGeneration,
           aspectRatio: aspectRatio ?? '16:9',
           numberOfVideos: numberOfVideos ?? 1,
-          durationSeconds: durationSeconds ?? 8
+          durationSeconds: durationSeconds ?? 8,
         },
       });
 
@@ -34,18 +36,21 @@ export const geminiVeoVideoTool = tool(
       if (results.length === 0) return '❌ Aucune vidéo générée.';
 
       const videoUrl = `${results[0].video?.uri}&key=${process.env.GOOGLE_API_KEY}`;
-      const outputPath = path.resolve(`generated_video_${Date.now()}.mp4`);
 
-      //TODO: envoyer une requête côté back pour générer la vidéo (webhook look-a-like)
+      // Assurer que le dossier /uploads existe
+      const uploadsDir = path.resolve('uploads');
+      if (!existsSync(uploadsDir)) {
+        mkdirSync(uploadsDir);
+      }
 
+      const outputPath = path.resolve(uploadsDir, `generated_video_${Date.now()}.mp4`);
+
+      console.log('🟢 Téléchargement de la vidéo depuis:', videoUrl);
+
+      // Téléchargement de la vidéo
       const resp = await fetch(videoUrl);
-      if (!resp.ok) {
-        throw new Error(`❌ Échec du téléchargement : ${resp.statusText}`);
-      }
-
-      if (!resp.body) {
-        throw new Error('❌ Réponse vide lors du téléchargement.');
-      }
+      if (!resp.ok) throw new Error(`❌ Échec du téléchargement : ${resp.statusText}`);
+      if (!resp.body) throw new Error('❌ Réponse vide lors du téléchargement.');
 
       const writer = createWriteStream(outputPath);
       await new Promise<void>((resolve, reject) => {
@@ -54,9 +59,29 @@ export const geminiVeoVideoTool = tool(
         writer.on('error', reject);
       });
 
-      return outputPath
+      console.log('📁 Vidéo enregistrée dans :', outputPath);
+
+      // Envoi au backend
+      const form = new FormData();
+      form.append('file', createReadStream(outputPath));
+      form.append('userId', userToken);
+
+      const backendResponse = await fetch('http://hackaton-backend:3000/api/v1/videos/upload', {
+        method: 'POST',
+        body: form,
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          ...form.getHeaders(),
+        },
+      });
+
+      if (!backendResponse.ok) {
+        throw new Error(`❌ Upload backend échoué : ${backendResponse.statusText}`);
+      }
+
+      return outputPath;
     } catch (err) {
-      console.error('Erreur lors de la génération vidéo :', err);
+      console.error('❌ Erreur lors de la génération vidéo :', err);
       return '❌ Erreur pendant la génération de la vidéo.';
     }
   },
@@ -74,16 +99,15 @@ export const geminiVeoVideoTool = tool(
         .default('veo-2.0-generate-001')
         .describe('Version du modèle Gemini Veo à utiliser.'),
       aspectRatio: z
-        .enum(['16:9','9:16'])
+        .enum(['16:9', '9:16'])
         .optional()
         .default('16:9')
         .describe('Format de la vidéo à générer.'),
-
       personGeneration: z
-        .enum(['dont_allow']) // 'allow_all' non disponible en UE
+        .enum(['dont_allow'])
         .optional()
         .default('dont_allow')
-        .describe("Autoriser ou non la génération de personnes. Dans l'UE, seule l’option 'dont_allow' est disponible."),
+        .describe("Autoriser ou non la génération de personnes (obligatoirement 'dont_allow' en UE)."),
       numberOfVideos: z
         .number()
         .int()
@@ -99,11 +123,10 @@ export const geminiVeoVideoTool = tool(
         .optional()
         .default(8)
         .describe('Durée de la vidéo (5 à 8 secondes).'),
-      userId: z
-        .number()
-        .int()
-        .positive()
-        .describe("ID de l'utilisateur qui génère la vidéo."),
+      userToken: z
+        .string()
+        .min(10, "Le token est trop court")
+        .describe("Token d'authentification de l'utilisateur qui génère la vidéo."),
     }),
   }
 );
