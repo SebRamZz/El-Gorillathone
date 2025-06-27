@@ -1,0 +1,102 @@
+services:
+  postgres:
+    image: postgres:17.5-alpine
+    container_name: hackaton-postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+    restart: on-failure
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h localhost",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: dockerfile.dev
+    container_name: hackaton-backend
+    working_dir: /usr/src/app
+    ports:
+      - "3000:3000"
+      - "5555:5555"
+    volumes:
+      - ./backend:/usr/src/app
+      - nest_node_modules:/usr/src/app/node_modules
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    command: npm run start:dev
+    depends_on:
+     - postgres
+
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dockerfile.dev
+    container_name: hackaton-frontend
+    working_dir: /usr/src/app
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend:/usr/src/app
+      - angular_node_modules:/usr/src/app/node_modules
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+    command: ng serve --host 0.0.0.0
+
+  gorillagent:
+    build:
+      context: ./gorillagent
+      dockerfile: Dockerfile
+    container_name: hackaton-gorillagent
+    working_dir: /app
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./gorillagent:/app
+      - gorillagent_node_modules:/app/node_modules
+      - gorillagent_uploads:/app/uploads
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - PORT=3002
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - REQUIRE_AUTH=false
+    command: npm run server
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  adminer:
+    image: adminer:4.8.1
+    container_name: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: pepa-linha
+      ADMINER_PLUGINS: 'tables-filter tinymce'
+
+volumes:
+  nest_node_modules:
+  angular_node_modules:
+  gorillagent_node_modules:
+  gorillagent_uploads:
+  postgres-data:

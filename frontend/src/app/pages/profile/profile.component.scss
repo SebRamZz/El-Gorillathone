@@ -1,0 +1,120 @@
+  * {
+    box-sizing: border-box;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Main content */
+  main {
+    flex-grow: 1;
+    padding: 3rem 5rem 5rem 5rem;
+    background: #fff;
+    border-radius: 0 0.6rem 0.6rem 0.6rem;
+    box-shadow: 0 0 12px rgb(0 0 0 / 0.05);
+  }
+
+  .form-section {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  h2.section-title {
+    font-weight: 700;
+    color: #141415;
+    font-size: 1.12rem;
+    margin-bottom: 6px;
+  }
+
+  p.section-desc {
+    margin-top: 0;
+    margin-bottom: 2.4rem;
+    font-weight: 400;
+    font-size: 0.89rem;
+    color: #888990;
+  }
+
+  .user-infos {
+    margin-top: 4rem;
+  }
+
+  .fields-row {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.8rem;
+  }
+
+  .field-group {
+    flex: 1;
+    min-width: 240px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+    color: #141415;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  label .required {
+    color: #e03c64;
+    font-weight: 700;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  select {
+    padding: 0.55rem 1rem;
+    border-radius: 10px;
+    border: 1.5px solid #e5e5e7;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #121212;
+    outline-offset: 2px;
+    transition: border-color 0.2s ease;
+  }
+
+  input[type="text"]:focus,
+  input[type="date"]:focus,
+  select:focus {
+    border-color: #ea2c62;
+    outline: none;
+  }
+
+  /* subtle horizontal separator */
+  hr {
+    border: none;
+    border-top: 1px solid #dedee3;
+    margin: 1rem 0 3rem 0;
+  }
+
+  /* Save button container */
+  .btn-container {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  button.save-btn {
+    cursor: pointer;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.65rem 1.5rem;
+    font-weight: 400;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    transition: background 0.2s ease;
+  }
+
+  button.save-btn:hover {
+    background: #d40045;
+  }
