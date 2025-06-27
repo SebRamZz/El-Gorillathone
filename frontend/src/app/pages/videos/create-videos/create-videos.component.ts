@@ -24,6 +24,22 @@ export class CreateVideosComponent implements OnInit {
   userId: string | null = null;
   isLoading = false;
   successMessage = '';
+  step = 1;
+
+  characterOptions = [
+  'Enfant', 'Vieillard', 'Super-héros', 'Chat', 'Chien', 'Robot', 'Alien', 'Princesse', 'Pirate', 'Chevalier',
+  'Magicien', 'Vampire', 'Zombie', 'Samouraï', 'Ninja', 'Scientifique', 'Explorateur', 'Athlète', 'Artiste', 'Président'
+];
+
+actionOptions = [
+  'Court', 'Danse', 'Chante', 'Lit', 'Cuisine', 'Joue au football', 'Fait du vélo', 'Nage', 'Vole', 'Se bat',
+  'Rit', 'Pleure', 'Fait un discours', 'Dort', 'Écrit', 'Dessine', 'Fait du skate', 'Fait du yoga', 'Joue de la guitare', 'Fait un selfie'
+];
+
+locationOptions = [
+  'Forêt', 'Plage', 'Ville', 'Montagne', 'Désert', 'Espace', 'Sous-marin', 'Château', 'École', 'Stade',
+  'Musée', 'Café', 'Parc', 'Île tropicale', 'Bateau', 'Train', 'Avion', 'Bibliothèque', 'Marché', 'Salle de concert'
+];
 
   constructor(
     private videoService: VideoService,
@@ -46,6 +62,33 @@ export class CreateVideosComponent implements OnInit {
     return 10;
   }
 
+  goToStep2() {
+    this.step = 2;
+  } 
+
+  buildFullPrompt(): string {
+    const { message, character, action, location } = this.form;
+    let description = '';
+
+    if (character && action && location) {
+      description = ` Un(e) ${character} qui ${action.toLowerCase()} à ${location.toLowerCase()}.`;
+    } else if (character && action) {
+      description = ` Un(e) ${character} qui ${action.toLowerCase()}.`;
+    } else if (character && location) {
+      description = ` Un(e) ${character} à ${location.toLowerCase()}.`;
+    } else if (action && location) {
+      description = ` Quelqu'un qui ${action.toLowerCase()} à ${location.toLowerCase()}.`;
+    } else if (character) {
+      description = ` Un(e) ${character}.`;
+    } else if (action) {
+      description = ` Quelqu'un qui ${action.toLowerCase()}.`;
+    } else if (location) {
+      description = ` À ${location.toLowerCase()}.`;
+    }
+
+    return (message || '') + description;
+  }
+
   onSubmit() {
     this.isLoading = true;
     this.successMessage = '';
@@ -56,7 +99,7 @@ export class CreateVideosComponent implements OnInit {
     }, 3000);
 
     this.videoService.generateVideo(
-      this.form.message,
+      this.buildFullPrompt(),
       this.form.model,
       this.form.aspectRatio,
       this.form.personGeneration,

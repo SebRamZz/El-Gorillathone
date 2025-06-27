@@ -31,14 +31,42 @@
       </span>
       {{ successMessage }}
     </div>
-    <form *ngIf='!isLoading && !successMessage' (ngSubmit)="onSubmit()" #veoForm="ngForm" class="veo-form">
+
+    <!-- Step 1 -->
+    <form *ngIf="!isLoading && !successMessage && step === 1" (ngSubmit)="goToStep2()" #step1Form="ngForm" class="veo-form">
       <div class="fields-row">
         <div class="field-group">
           <label for="message">Prompt <span class="required">*</span></label>
           <textarea id="message" name="message" [(ngModel)]="form.message" required rows="3" placeholder="Décrivez la vidéo à générer..."></textarea>
         </div>
       </div>
+      <div class="fields-row">
+        <div class="field-group">
+          <label for="character">Personnage</label>
+          <select id="character" name="character" [(ngModel)]="form.character" required>
+            <option *ngFor="let c of characterOptions" [value]="c">{{c}}</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="action">Action</label>
+          <select id="action" name="action" [(ngModel)]="form.action" required>
+            <option *ngFor="let a of actionOptions" [value]="a">{{a}}</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="location">Lieu</label>
+          <select id="location" name="location" [(ngModel)]="form.location" required>
+            <option *ngFor="let l of locationOptions" [value]="l">{{l}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-container">
+        <button type="submit" class="main-btn">Suivant</button>
+      </div>
+    </form>
 
+    <!-- Step 2 -->
+    <form *ngIf="!isLoading && !successMessage && step === 2" (ngSubmit)="onSubmit()" #step2Form="ngForm" class="veo-form">
       <div class="fields-row model-row">
         <div class="field-group">
           <label for="model">Modèle</label>
@@ -53,7 +81,6 @@
           </span>
         </div>
       </div>
-
       <div class="fields-row">
         <div class="field-group">
           <label for="aspectRatio">Format</label>
@@ -63,7 +90,6 @@
           </select>
         </div>
       </div>
-
       <div class="fields-row">
         <div class="field-group">
           <label for="numberOfVideos">Nombre de vidéos</label>
@@ -74,8 +100,8 @@
           <input type="number" id="durationSeconds" name="durationSeconds" [(ngModel)]="form.durationSeconds" min="5" max="8" required />
         </div>
       </div>
-
       <div class="btn-container">
+        <button type="button" class="main-btn" (click)="step = 1" style="margin-right: 1rem;">Précédent</button>
         <button type="submit" class="main-btn">Générer la vidéo</button>
       </div>
     </form>
